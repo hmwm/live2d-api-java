@@ -58,8 +58,9 @@ public class Live2dController {
                 return ResponseEntity.badRequest().body("Model config not found");
             }
             
-            // 处理路径
-            processModelPaths(config, modelName.toString());
+            // 处理路径 - 获取实际的模型路径
+            String actualModelPath = getActualModelPath(modelName, textureId);
+            processModelPaths(config, actualModelPath);
             
             return ResponseEntity.ok(config);
             
@@ -236,6 +237,26 @@ public class Live2dController {
             
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("<p>Error: " + e.getMessage() + "</p>");
+        }
+    }
+    
+    /**
+     * 获取实际的模型路径
+     */
+    private String getActualModelPath(Object modelName, int textureId) {
+        if (modelName instanceof List) {
+            @SuppressWarnings("unchecked")
+            List<String> modelGroup = (List<String>) modelName;
+            // 对于模型组，textureId=0时选择第一个模型，textureId>0时选择对应的模型
+            if (textureId == 0) {
+                return modelGroup.get(0);
+            } else if (textureId > 0 && textureId <= modelGroup.size()) {
+                return modelGroup.get(textureId - 1);
+            } else {
+                return modelGroup.get(0); // 默认选择第一个
+            }
+        } else {
+            return modelName.toString();
         }
     }
     
