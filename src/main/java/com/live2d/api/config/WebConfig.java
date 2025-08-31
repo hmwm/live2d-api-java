@@ -17,8 +17,13 @@ public class WebConfig implements WebMvcConfigurer {
     
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // 映射模型文件访问路径
+        // 映射模型文件访问路径 - 支持相对路径访问
         registry.addResourceHandler("/api/" + modelPath + "/**")
+                .addResourceLocations("file:" + modelPath + "/")
+                .setCachePeriod(3600); // 缓存1小时
+        
+        // 映射模型文件访问路径 - 支持直接访问model路径
+        registry.addResourceHandler("/" + modelPath + "/**")
                 .addResourceLocations("file:" + modelPath + "/")
                 .setCachePeriod(3600); // 缓存1小时
     }

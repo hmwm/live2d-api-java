@@ -288,27 +288,27 @@ public class Live2dController {
      * 处理模型路径
      */
     private void processModelPaths(ModelConfig config, String modelName) {
-        // 处理模型文件路径 - 使用绝对路径
+        // 处理模型文件路径 - 使用相对路径，让前端JavaScript处理完整URL
         if (config.getModel() != null) {
-            config.setModel("/api/" + modelPath + "/" + modelName + "/" + config.getModel());
+            config.setModel(modelPath + "/" + modelName + "/" + config.getModel());
         }
         
         // 处理皮肤路径
         if (config.getTextures() != null) {
             List<String> processedTextures = new ArrayList<>();
             for (String texture : config.getTextures()) {
-                processedTextures.add("/api/" + modelPath + "/" + modelName + "/" + texture);
+                processedTextures.add(modelPath + "/" + modelName + "/" + texture);
             }
             config.setTextures(processedTextures);
         }
         
         // 处理其他文件路径
         if (config.getPose() != null) {
-            config.setPose("/api/" + modelPath + "/" + modelName + "/" + config.getPose());
+            config.setPose(modelPath + "/" + modelName + "/" + config.getPose());
         }
         
         if (config.getPhysics() != null) {
-            config.setPhysics("/api/" + modelPath + "/" + modelName + "/" + config.getPhysics());
+            config.setPhysics(modelPath + "/" + modelName + "/" + config.getPhysics());
         }
         
         // 处理动作文件路径
@@ -316,10 +316,10 @@ public class Live2dController {
             config.getMotions().forEach((motionType, motionList) -> {
                 motionList.forEach(motion -> {
                     if (motion.containsKey("file")) {
-                        motion.put("file", "/api/" + modelPath + "/" + modelName + "/" + motion.get("file"));
+                        motion.put("file", modelPath + "/" + modelName + "/" + motion.get("file"));
                     }
                     if (motion.containsKey("sound")) {
-                        motion.put("sound", "/api/" + modelPath + "/" + modelName + "/" + motion.get("sound"));
+                        motion.put("sound", modelPath + "/" + modelName + "/" + motion.get("sound"));
                     }
                 });
             });
@@ -329,7 +329,7 @@ public class Live2dController {
         if (config.getExpressions() != null) {
             config.getExpressions().forEach((expressionType, expression) -> {
                 if (expression.containsKey("file")) {
-                    expression.put("file", "/api/" + modelPath + "/" + modelName + "/" + expression.get("file"));
+                    expression.put("file", modelPath + "/" + modelName + "/" + expression.get("file"));
                 }
             });
         }
