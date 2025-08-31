@@ -1,0 +1,11 @@
+# 生产环境配置
+spring:
+  profiles:
+    active: prod
+
+# 生产环境日志级别
+logging:
+  level:
+    com.live2d.api: INFO
+    org.springframework: WARN
+    root: WARN

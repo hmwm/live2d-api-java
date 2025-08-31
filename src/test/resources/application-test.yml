@@ -1,0 +1,16 @@
+# 测试环境配置
+spring:
+  profiles:
+    active: test
+
+# 测试环境日志级别
+logging:
+  level:
+    com.live2d.api: DEBUG
+    org.springframework: WARN
+    root: WARN
+
+# 测试环境模型路径
+live2d:
+  model:
+    path: src/test/resources/model

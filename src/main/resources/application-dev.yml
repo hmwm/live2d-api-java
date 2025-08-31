@@ -1,0 +1,10 @@
+# 开发环境配置
+spring:
+  profiles:
+    active: dev
+
+# 开发环境日志级别
+logging:
+  level:
+    com.live2d.api: DEBUG
+    org.springframework.web: DEBUG
