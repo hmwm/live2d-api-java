@@ -316,10 +316,16 @@ public class Live2dController {
             config.getMotions().forEach((motionType, motionList) -> {
                 motionList.forEach(motion -> {
                     if (motion.containsKey("file")) {
-                        motion.put("file", "../" + modelPath + "/" + modelName + "/" + motion.get("file"));
+                        Object fileValue = motion.get("file");
+                        if (fileValue instanceof String) {
+                            motion.put("file", "../" + modelPath + "/" + modelName + "/" + fileValue);
+                        }
                     }
                     if (motion.containsKey("sound")) {
-                        motion.put("sound", "../" + modelPath + "/" + modelName + "/" + motion.get("sound"));
+                        Object soundValue = motion.get("sound");
+                        if (soundValue instanceof String) {
+                            motion.put("sound", "../" + modelPath + "/" + modelName + "/" + soundValue);
+                        }
                     }
                 });
             });
