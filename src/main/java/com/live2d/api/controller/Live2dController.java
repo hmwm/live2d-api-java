@@ -248,22 +248,28 @@ public class Live2dController {
             if (modelName instanceof List) {
                 @SuppressWarnings("unchecked")
                 List<String> modelGroup = (List<String>) modelName;
-                modelPathStr = textureId > 0 && textureId <= modelGroup.size() 
-                    ? modelGroup.get(textureId - 1) 
-                    : modelGroup.get(0);
+                // 对于模型组，textureId=0时选择第一个模型，textureId>0时选择对应的模型
+                if (textureId == 0) {
+                    modelPathStr = modelGroup.get(0);
+                } else if (textureId > 0 && textureId <= modelGroup.size()) {
+                    modelPathStr = modelGroup.get(textureId - 1);
+                } else {
+                    modelPathStr = modelGroup.get(0); // 默认选择第一个
+                }
             } else {
                 modelPathStr = modelName.toString();
             }
             
             File configFile = new File(modelPath, modelPathStr + "/index.json");
             if (!configFile.exists()) {
+                System.err.println("Config file not found: " + configFile.getAbsolutePath());
                 return null;
             }
             
             String json = FileUtils.readFileToString(configFile, "UTF-8");
             ModelConfig config = objectMapper.readValue(json, ModelConfig.class);
             
-            // 如果指定了皮肤ID，更新皮肤配置
+            // 如果指定了皮肤ID，更新皮肤配置（仅对单个模型有效）
             if (textureId > 0 && modelName instanceof String) {
                 Object textureName = modelTexturesService.getTextureName(modelName.toString(), textureId);
                 if (textureName != null) {
@@ -280,6 +286,7 @@ public class Live2dController {
             return config;
             
         } catch (IOException e) {
+            System.err.println("Failed to load model config: " + e.getMessage());
             throw new RuntimeException("Failed to load model config", e);
         }
     }
@@ -333,11 +340,30 @@ public class Live2dController {
         
         // 处理表情文件路径
         if (config.getExpressions() != null) {
-            config.getExpressions().forEach((expressionType, expression) -> {
-                if (expression.containsKey("file")) {
-                    expression.put("file", "../" + modelPath + "/" + modelName + "/" + expression.get("file"));
-                }
-            });
+            Object expressions = config.getExpressions();
+            if (expressions instanceof List) {
+                @SuppressWarnings("unchecked")
+                List<Map<String, Object>> expressionList = (List<Map<String, Object>>) expressions;
+                expressionList.forEach(expression -> {
+                    if (expression.containsKey("file")) {
+                        Object fileValue = expression.get("file");
+                        if (fileValue instanceof String) {
+                            expression.put("file", "../" + modelPath + "/" + modelName + "/" + fileValue);
+                        }
+                    }
+                });
+            } else if (expressions instanceof Map) {
+                @SuppressWarnings("unchecked")
+                Map<String, Map<String, Object>> expressionMap = (Map<String, Map<String, Object>>) expressions;
+                expressionMap.forEach((expressionType, expression) -> {
+                    if (expression.containsKey("file")) {
+                        Object fileValue = expression.get("file");
+                        if (fileValue instanceof String) {
+                            expression.put("file", "../" + modelPath + "/" + modelName + "/" + fileValue);
+                        }
+                    }
+                });
+            }
         }
     }
 }

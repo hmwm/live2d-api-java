@@ -40,7 +40,7 @@ public class ModelConfig {
     private Map<String, List<Map<String, Object>>> motions;
     
     @JsonProperty("expressions")
-    private Map<String, Map<String, String>> expressions;
+    private Object expressions;
     
     @JsonProperty("pose")
     private String pose;
@@ -123,11 +123,11 @@ public class ModelConfig {
         this.motions = motions;
     }
     
-    public Map<String, Map<String, String>> getExpressions() {
+    public Object getExpressions() {
         return expressions;
     }
     
-    public void setExpressions(Map<String, Map<String, String>> expressions) {
+    public void setExpressions(Object expressions) {
         this.expressions = expressions;
     }
     
