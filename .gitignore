@@ -63,6 +63,16 @@ logs/
 model/*/textures.cache
 model/*/textures_order.json
 
+# Live2D Model files (too large for git)
+model/*/*.moc
+model/*/motions/*.mtn
+model/*/textures/*.png
+model/*/textures/*.jpg
+model/*/textures/*.jpeg
+model/*/texture_*/*.png
+model/*/texture_*/*.jpg
+model/*/texture_*/*.jpeg
+
 # Temporary files
 *.tmp
 *.temp
